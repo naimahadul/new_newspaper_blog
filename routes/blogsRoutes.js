@@ -2,7 +2,9 @@ import express from "express";
 const router = express.Router();
 import { verifyToken } from "../middleware/middleware.js";
 import { findAuthorById } from "../middleware/authMiddleware.js";
+import { validToken } from "../middleware/tokenValidationMiddleware.js";
 import {
+  getAllBlogs,
   blogsCreate,
   deleteBlog,
   getAllByAuthor,
@@ -12,16 +14,39 @@ import {
 import { findBlogById } from "../middleware/blogMiddleware.js";
 import ErrorHandler from "../middleware/errorHandler.js";
 
-router.post("/", verifyToken, ErrorHandler, blogsCreate);
-router.put("/:id", verifyToken, findBlogById, ErrorHandler, updateBlog);
-router.delete("/:id", verifyToken, findBlogById, ErrorHandler, deleteBlog);
+router.get("/", ErrorHandler, getAllBlogs);
+router.post("/", validToken, verifyToken, ErrorHandler, blogsCreate);
+router.put(
+  "/:id",
+  validToken,
+  verifyToken,
+  findBlogById,
+  ErrorHandler,
+  updateBlog
+);
+router.delete(
+  "/:id",
+  validToken,
+  verifyToken,
+  findBlogById,
+  ErrorHandler,
+  deleteBlog
+);
 router.get(
   "/authorBlogs",
+  validToken,
   verifyToken,
   findAuthorById,
   ErrorHandler,
   getAllByAuthor
 );
-router.get("/:id", verifyToken, findBlogById, ErrorHandler, getBlogById);
+router.get(
+  "/:id",
+  validToken,
+  verifyToken,
+  findBlogById,
+  ErrorHandler,
+  getBlogById
+);
 
 export default router;

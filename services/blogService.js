@@ -2,7 +2,14 @@ import dotenv from "dotenv";
 import db from "../models/index.js";
 dotenv.config();
 const Blog = db.Blog;
-const Op = db.Sequelize.Op;
+
+export async function findAllBlogs(page, size) {
+  const blogs = await Blog.findAndCountAll({
+    limit: size,
+    offset: page * size,
+  });
+  return blogs;
+}
 
 //create blog
 export async function createBlog(info) {

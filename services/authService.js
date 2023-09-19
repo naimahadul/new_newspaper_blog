@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import db from "../models/index.js";
+import customError from "../utils/customErrorHandler.js";
 dotenv.config();
 const User = db.User;
 
@@ -23,15 +24,11 @@ export async function loginUser(info) {
     const username = info.username;
     const user = await User.findOne({ where: { username } });
     if (!user) {
-      const error = new Error("User not found");
-      error.statusCode = 404;
-      throw error;
+      throw customError("User not found!", 400);
     }
     const passwordMatch = await bcrypt.compare(info.password, user.password);
     if (!passwordMatch) {
-      const error = new Error("Incorrect password");
-      error.statusCode = 400;
-      throw error;
+      throw customError("Incorrect password!", 400);
     }
     const token = jwt.sign({ userId: user.authorId }, process.env.JWT_SECRET, {
       expiresIn: "1h",

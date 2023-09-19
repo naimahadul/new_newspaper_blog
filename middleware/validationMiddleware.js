@@ -1,37 +1,28 @@
 import validator from "../utils/validator.js";
 import db from "../models/index.js";
+import customError from "../utils/customErrorHandler.js";
 const User = db.User;
 
 export default async function validationMiddleware(req, res, next) {
   try {
     if (!validator.isUsernameValid(req.body.username)) {
-      const error = new Error("username must be 4 characters long!");
-      error.statusCode = 400;
-      throw error;
+      throw customError("username must be 4 characters long!", 400);
     }
     if (!validator.isEmailValid(req.body.email)) {
-      const error = new Error("Email is invalid!");
-      error.statusCode = 400;
-      throw error;
+      throw customError("Email is invalid!", 400);
     }
     if (!validator.isPasswordValid(req.body.password)) {
-      const error = new Error("password must be 8 characters long!");
-      error.statusCode = 400;
-      throw error;
+      throw customError("password must be 8 characters long!", 400);
     }
     const username = req.body.username;
     const existingUser1 = await User.findOne({ where: { username } });
     if (existingUser1) {
-      const error = new Error("Username has already been taken!");
-      error.statusCode = 400;
-      throw error;
+      throw customError("Username has already been taken!", 400);
     }
     const email = req.body.email;
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      const error = new Error("Email has already been taken!");
-      error.statusCode = 400;
-      throw error;
+      throw customError("Email has already been taken!", 400);
     }
     next();
   } catch (error) {

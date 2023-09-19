@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import {
+  findAllBlogs,
   createBlog,
   updateBlogById,
   deleteBlogById,
@@ -8,6 +9,18 @@ import {
 } from "../services/blogService.js";
 import { sendResponse } from "../utils/response.js";
 dotenv.config();
+
+export async function getAllBlogs(req, res, next) {
+  try {
+    const page = Number.parseInt(req.query.page);
+    const size = Number.parseInt(req.query.size);
+    const blogs = await findAllBlogs(page, size);
+
+    sendResponse(res, blogs, 200);
+  } catch (err) {
+    next(err);
+  }
+}
 
 //blogs create
 export async function blogsCreate(req, res, next) {
@@ -66,7 +79,8 @@ export async function deleteBlog(req, res, next) {
   try {
     const blogId = req.params.id;
     await deleteBlogById(blogId);
-    res.json({ message: "Blog deleted successfully" });
+    const message = "blog has been deleted succesfully.";
+    sendResponse(res,blogId, 200, message);
   } catch (error) {
     next(error);
   }
