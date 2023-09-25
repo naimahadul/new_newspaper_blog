@@ -11,4 +11,4 @@ function isUsernameValid(username) {
   return validator.isLength(username, { min: 4 });
 }
 
-export default { isEmailValid, isPasswordValid, isUsernameValid };
+export default { isEmailValid, isPasswordValid, isUsernameValid,validator };

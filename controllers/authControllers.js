@@ -3,7 +3,6 @@ import { signupUser, loginUser } from "../services/authService.js";
 import { sendResponse } from "../utils/response.js";
 dotenv.config();
 
-// Signup
 export async function signup(req, res, next) {
   try {
     const info = {
@@ -16,13 +15,12 @@ export async function signup(req, res, next) {
       username: newUser.username,
       email: newUser.email,
     };
-    sendResponse(res, SignUpDto, 201);
+    sendResponse(req, res, SignUpDto, 201);
   } catch (error) {
     next(error);
   }
 }
 
-// Login
 export async function login(req, res, next) {
   try {
     const info = {
@@ -30,7 +28,7 @@ export async function login(req, res, next) {
       password: req.body.password,
     };
     const { token } = await loginUser(info);
-    sendResponse(res, token, 201);
+    sendResponse(req, res, token, 201);
   } catch (error) {
     next(error);
   }

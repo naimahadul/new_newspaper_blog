@@ -6,7 +6,7 @@ import customError from "../utils/customErrorHandler.js";
 dotenv.config();
 const User = db.User;
 
-// Signup user function
+
 export async function signupUser(info) {
   try {
     const hashedPassword = await bcrypt.hash(info.password, 10);
@@ -18,7 +18,7 @@ export async function signupUser(info) {
   }
 }
 
-// Login user function
+
 export async function loginUser(info) {
   try {
     const username = info.username;
