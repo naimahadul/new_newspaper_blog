@@ -1,12 +1,11 @@
 import js2xmlparser from "js2xmlparser";
 
-export async function sendResponse (req, res, data, statusCode) {
-  if (req.headers.accept === 'application/xml') {
+export async function sendResponse(req, res, data, statusCode) {
+  if (req.headers.accept === "application/xml") {
     const xmlData = js2xmlparser.parse("data", { data });
-    res.status(statusCode).send(xmlData);
-  }
-  else {
-    res.status(statusCode).json({ data });
+    return res.status(statusCode).send(xmlData);
+  } else {
+    return res.status(statusCode).json({ data });
   }
   //  res.format({
   //   json: function () {
@@ -17,7 +16,7 @@ export async function sendResponse (req, res, data, statusCode) {
   //      return res.status(statusCode).send(xmlData);
   //   },
   // });
-};
+}
 
 // .....................................
 // export async function sendResponse(res, data, statusCode) {
@@ -30,5 +29,6 @@ export async function sendResponse (req, res, data, statusCode) {
 //         return res.status(statusCode).send(xmlData);
 //       },
 //     });
-  
+
 // }
+export default sendResponse;

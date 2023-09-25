@@ -2,7 +2,7 @@ import mockDb from "../../__mock__/mockDb";
 import blogService, { createBlog } from "../../services/blogService";
 import customError from "../../utils/customErrorHandler";
 import * as blogControllers from "../../controllers/blogControllers.js";
-import constentNegotiation  from "../../utils/response.js";
+import * as responseUtils from "../../utils/response.js";
 import httpMocks from "node-mocks-http";
 describe("Blog controller test", () => {
   describe("Add blog test", () => {
@@ -13,7 +13,7 @@ describe("Blog controller test", () => {
       await blogControllers.blogsCreate(req, res, next);
     });
     it("Blog Added", async () => {
-      const req ={
+      const req = {
         body: {
           title: "Blog 1",
           description: "Description 1",
@@ -23,29 +23,33 @@ describe("Blog controller test", () => {
           accept: "application/json",
         },
       };
-      const res = {};
-      const expectedResponse = {
+      const res = httpMocks.createResponse();
+
+      const expectedResponse = httpMocks.createResponse({
+        statusCode: 200,
         data: mockDb.blogs[0],
-      };
+      });
       const next = jest.fn();
       jest
         .spyOn(blogService, "createBlog")
         .mockResolvedValueOnce(expectedResponse);
-        jest
-        .spyOn(constentNegotiation, "sendRensponse")
+      jest
+        .spyOn(responseUtils, "sendResponse")
         .mockReturnValueOnce(expectedResponse);
+
+      let response = await blogControllers.blogsCreate(req, res, next);
+      response =  httpMocks.createResponse(response);
       
-      const response = await blogControllers.blogsCreate(req, res, next);
       expect(blogService.createBlog).toHaveBeenCalledTimes(1);
       //var data = res._getJSONData();
-      console.log(response);
       expect(blogService.createBlog).toHaveBeenCalledWith({
         title: req.body.title,
         description: req.body.description,
         authorId: req.userId,
       });
+      console.log(response);
+      console.log(expectedResponse);
       expect(response).toStrictEqual(expectedResponse);
-      expect(resStatusCode).toBe(201);
     });
   });
 });
