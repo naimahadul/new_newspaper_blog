@@ -13,7 +13,7 @@ export async function getAllBlogs(req, res, next) {
   try {
     const page = Number.parseInt(req.query.page);
     const size = Number.parseInt(req.query.size);
-    const blogs = await findAllBlogs(page, size);
+    const blogs = await blogService.findAllBlogs(page, size);
 
     return sendResponse(req, res, blogs, 200);
   } catch (err) {
@@ -42,7 +42,7 @@ export async function updateBlog(req, res, next) {
       description: req.body.description,
       blogId: req.params.id,
     };
-    const updatedBlog = await updateBlogById(info);
+    const updatedBlog = await blogService.updateBlogById(info);
     return sendResponse(req, res, updatedBlog, 200);
   } catch (error) {
     next(error);
@@ -62,7 +62,7 @@ export async function getAllByAuthor(req, res, next) {
 export async function getBlogById(req, res, next) {
   const blogId = req.params.id;
   try {
-    const blog = await getBlogId(blogId);
+    const blog = await blogService.getBlogId(blogId);
     return sendResponse(req, res, blog, 200);
   } catch (error) {
     next(error);
@@ -72,10 +72,11 @@ export async function getBlogById(req, res, next) {
 export async function deleteBlog(req, res, next) {
   try {
     const blogId = req.params.id;
-    await deleteBlogById(blogId);
+    await blogService.deleteBlogById(blogId);
     const message = "blog has been deleted succesfully.";
-    return sendResponse(req, res, blogId, 200);
+    return sendResponse(req, res, blogId, 204);
   } catch (error) {
     next(error);
   }
 }
+export default { getAllBlogs, deleteBlog, updateBlog };

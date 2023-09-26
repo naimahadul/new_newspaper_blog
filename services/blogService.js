@@ -7,16 +7,14 @@ export async function findAllBlogs(page, size) {
   const blogs = await Blog.findAndCountAll({
     limit: size,
     offset: page * size,
-  })
+  });
   return blogs;
 }
-
 
 export async function createBlog(info) {
   const blogObject = await Blog.create(info);
   return blogObject;
 }
-
 
 export async function updateBlogById(info) {
   try {
@@ -30,7 +28,6 @@ export async function updateBlogById(info) {
   }
 }
 
-
 export async function deleteBlogById(blogId) {
   try {
     const blog = await Blog.findByPk(blogId);
@@ -40,12 +37,10 @@ export async function deleteBlogById(blogId) {
   }
 }
 
-
 export async function getBlogId(blogId) {
   const blog = await Blog.findByPk(blogId);
   return blog;
 }
-
 
 export async function getAllBlogsByAuthor(authorId) {
   try {
@@ -57,4 +52,4 @@ export async function getAllBlogsByAuthor(authorId) {
     throw error;
   }
 }
-export default {createBlog};
+export default { createBlog, getBlogId, findAllBlogs,deleteBlogById,updateBlogById };
