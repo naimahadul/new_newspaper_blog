@@ -10,6 +10,7 @@ const sequelize = new Sequelize(
   dbConfig.DBCONFIG.PASSWORD,
   {
     host: dbConfig.DBCONFIG.HOST,
+    port: dbConfig.DBCONFIG.PORT,
     dialect: dbConfig.DBCONFIG.dialect,
     operatorsAliases: false,
     pool: {
@@ -23,7 +24,11 @@ const sequelize = new Sequelize(
 
 sequelize.authenticate().then(() => {
   console.log("Db Connected");
-});
+})
+.catch(err => {
+  console.log('Error' + err)
+})
+
 
 const db = {};
 
