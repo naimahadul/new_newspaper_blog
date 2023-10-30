@@ -22,13 +22,14 @@ const sequelize = new Sequelize(
   }
 );
 
-sequelize.authenticate().then(() => {
-  console.log("Db Connected");
-})
-.catch(err => {
-  console.log('Error' + err)
-})
-
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Db Connected");
+  })
+  .catch((err) => {
+    console.log("Error" + err);
+  });
 
 const db = {};
 
@@ -38,6 +39,8 @@ db.sequelize = sequelize;
 
 db.User = authorSchema(sequelize, DataTypes);
 db.Blog = blogSchema(sequelize, DataTypes);
+
+db.Blog.belongsTo(db.User, { foreignKey: "authorId", targetKey: "authorId" });
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("Yes resync done");

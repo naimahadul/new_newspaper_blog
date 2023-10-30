@@ -2,11 +2,13 @@ import dotenv from "dotenv";
 import db from "../models/index.js";
 dotenv.config();
 const Blog = db.Blog;
+const User = db.User;
 
 export async function findAllBlogs(page, size) {
-  const blogs = await Blog.findAndCountAll({
+  const blogs = await Blog.findAll({
     limit: size,
     offset: page * size,
+    order: [["createdAt", "DESC"]],
   });
   return blogs;
 }
@@ -26,6 +28,16 @@ export async function updateBlogById(info) {
   } catch (error) {
     throw error;
   }
+}
+
+export async function getUsername(authorId) {
+  const username = User.findOne({
+    attributes: ["username"],
+    where: {
+      authorId: authorId,
+    },
+  });
+  return username;
 }
 
 export async function deleteBlogById(blogId) {
@@ -52,4 +64,23 @@ export async function getAllBlogsByAuthor(authorId) {
     throw error;
   }
 }
-export default { createBlog, getBlogId, findAllBlogs,deleteBlogById,updateBlogById };
+
+export async function getBlogsSize() {
+  try {
+    const count = await Blog.count();
+    console.log(count);
+    return count;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export default {
+  createBlog,
+  getBlogId,
+  findAllBlogs,
+  deleteBlogById,
+  updateBlogById,
+  getBlogsSize,
+  getUsername,
+};

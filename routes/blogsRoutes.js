@@ -10,10 +10,13 @@ import {
   getAllByAuthor,
   updateBlog,
   getBlogById,
+  getBlogsSize,
+  getByUsername,
 } from "../controllers/blogControllers.js";
 import { findBlogById } from "../middleware/blogMiddleware.js";
 import ErrorHandler from "../middleware/errorHandler.js";
-
+router.get("/size", getBlogsSize);
+router.get("/username/:id",getByUsername);
 router.get("/", ErrorHandler, getAllBlogs);
 router.post("/", validToken, verifyToken, ErrorHandler, blogsCreate);
 router.put(
@@ -40,13 +43,6 @@ router.get(
   ErrorHandler,
   getAllByAuthor
 );
-router.get(
-  "/:id",
-  validToken,
-  verifyToken,
-  findBlogById,
-  ErrorHandler,
-  getBlogById
-);
+router.get("/:id", findBlogById, ErrorHandler, getBlogById);
 
 export default router;
